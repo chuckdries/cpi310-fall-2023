@@ -1,1 +1,14 @@
-<h1>hello handlebars!</h1>
+<h1>hello message board!</h1>
+
+<ul>
+  {{#each messages}}
+    <li>{{this}}</li>
+  {{/each}}
+</ul>
+
+<form action="/message" method="POST">
+  <label>Message
+    <input type="text" name="message" />
+  </label>
+  <button type="submit">send</button>
+</form>

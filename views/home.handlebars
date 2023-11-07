@@ -1,12 +1,12 @@
-<h1>hello message board!</h1>
+<h1>CPI310 Message Board</h1>
 
-<ul>
+<ul class="message-list">
   {{#each messages}}
     <li>{{message}}</li>
   {{/each}}
 </ul>
 
-<form action="/message" method="POST">
+<form class="message-form" action="/message" method="POST">
   <label>Message
     <input type="text" name="message" />
   </label>

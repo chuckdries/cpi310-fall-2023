@@ -14,13 +14,31 @@ const dbPromise = open({
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser);
+app.use(cookieParser());
 
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 app.set("views", "./views");
 
 app.use("/public", express.static("./public"));
+
+app.use(async (req, res, next) => {
+  console.log('cookies', req.cookies);
+  if (!req.cookies.authToken) {
+    return next();
+  }
+  const db = await dbPromise;
+  const authToken = await db.get("SELECT * FROM AuthTokens WHERE token=?;", req.cookies.authToken);
+  if (!authToken) {
+    return next();
+  }
+  const user = await db.get("SELECT id FROM Users WHERE id=?", authToken.userId);
+  if (!user) {
+    return next();
+  }
+  req.user = user.id
+  next();
+});
 
 app.get("/", async (req, res) => {
   try {
@@ -30,6 +48,7 @@ app.get("/", async (req, res) => {
     res.render("home", { messages, user });
   } catch (e) {
     console.log(e);
+    res.render("home", { error: "Something went wrong"});
   }
 });
 

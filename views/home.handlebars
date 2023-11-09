@@ -6,9 +6,13 @@
   {{/each}}
 </ul>
 
+{{#if user}}
 <form class="message-form" action="/message" method="POST">
   <label>Message
     <input type="text" name="message" />
   </label>
   <button type="submit">send</button>
 </form>
+{{else}}
+<a href="/register">Register</a>
+{{/if}}

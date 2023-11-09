@@ -6,6 +6,9 @@
     <link rel="stylesheet" href="/public/index.css">
 </head>
 <body>
+    {{#if error}}
+    <div class="error-box">{{error}}</div>
+    {{/if}}
 
     {{{body}}}
 

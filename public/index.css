@@ -5,6 +5,16 @@ body {
   font-family: sans-serif;
 }
 
+form {
+  padding: 1em;
+}
+
+.error-box {
+  background: #CC0000;
+  color: white;
+  padding: 1em;
+}
+
 .message-list {
   list-style-type: none;
   padding-left: 0;

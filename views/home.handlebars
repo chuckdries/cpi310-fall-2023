@@ -1,8 +1,9 @@
 <h1>CPI310 Message Board</h1>
+{{#if user}}<a href="/logout">logout</a>{{/if}}
 
 <ul class="message-list">
   {{#each messages}}
-    <li>{{message}}</li>
+    <li>{{author}}: {{message}}</li>
   {{/each}}
 </ul>
 
@@ -15,4 +16,5 @@
 </form>
 {{else}}
 <a href="/register">Register</a>
+<a href="/login">Login</a>
 {{/if}}

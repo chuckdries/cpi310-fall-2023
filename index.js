@@ -23,32 +23,40 @@ app.set("views", "./views");
 app.use("/public", express.static("./public"));
 
 app.use(async (req, res, next) => {
-  console.log('cookies', req.cookies);
   if (!req.cookies.authToken) {
     return next();
   }
   const db = await dbPromise;
-  const authToken = await db.get("SELECT * FROM AuthTokens WHERE token=?;", req.cookies.authToken);
+  const authToken = await db.get(
+    "SELECT * FROM AuthTokens WHERE token=?;",
+    req.cookies.authToken
+  );
   if (!authToken) {
     return next();
   }
-  const user = await db.get("SELECT id FROM Users WHERE id=?", authToken.userId);
+  const user = await db.get(
+    "SELECT id FROM Users WHERE id=?",
+    authToken.userId
+  );
   if (!user) {
     return next();
   }
-  req.user = user.id
+  req.user = user.id;
   next();
 });
 
 app.get("/", async (req, res) => {
   try {
     const db = await dbPromise;
-    const messages = await db.all("SELECT * FROM Messages;");
+    const messages = await db.all(
+      `SELECT Messages.id, Messages.message, Users.username as author 
+        FROM Messages LEFT JOIN Users WHERE Messages.authorId = Users.id;`
+    );
     const user = req.user;
     res.render("home", { messages, user });
   } catch (e) {
-    console.log(e);
-    res.render("home", { error: "Something went wrong"});
+    console.log("slash route", e);
+    res.render("home", { error: "Something went wrong" });
   }
 });
 
@@ -60,9 +68,32 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 
+app.get("/login", (req, res) => {
+  if (req.user) {
+    return res.redirect("/");
+  }
+  res.render("login");
+});
+
+app.get("/logout", async (req, res) => {
+  if (!req.user || !req.cookies.authToken) {
+    return res.redirect("/");
+  }
+  const db = await dbPromise;
+  await db.run("DELETE FROM AuthTokens WHERE token=?", req.cookies.authToken);
+  res.cookie("authToken", "", {
+    expires: new Date(),
+  });
+  res.redirect("/");
+});
+
 app.post("/message", async (req, res) => {
   const db = await dbPromise;
-  await db.run("INSERT INTO Messages (message) VALUES (?);", req.body.message);
+  await db.run(
+    "INSERT INTO Messages (message, authorId) VALUES (?, ?);",
+    req.body.message,
+    req.user
+  );
   res.redirect("/");
 });
 
@@ -85,16 +116,59 @@ app.post("/register", async (req, res) => {
       passwordHash
     );
   } catch (e) {
+    console.log("register route", e);
     return res.render("register", {
       error:
         e.code === "SQLITE_CONSTRAINT"
           ? "Username taken"
-          : "Something went wrong"
+          : "Something went wrong",
     });
   }
   const token = v4();
-  await db.run('INSERT INTO AuthTokens (token, userId) VALUES (?, ?);', token, result.lastID);
-  res.cookie('authToken', token);
+  await db.run(
+    "INSERT INTO AuthTokens (token, userId) VALUES (?, ?);",
+    token,
+    result.lastID
+  );
+  res.cookie("authToken", token, {
+    expires: new Date(Date.now() + 9000000000000),
+  });
+  res.redirect("/");
+});
+
+app.post("/login", async (req, res) => {
+  if (
+    !req.body.username ||
+    !req.body.password ||
+    req.body.username.length === 0 ||
+    req.body.password.length === 0
+  ) {
+    return res.render("login", { error: "Invalid parameters" });
+  }
+  const db = await dbPromise;
+  const user = await db.get(
+    "SELECT * FROM Users where username=?;",
+    req.body.username
+  );
+  if (!user) {
+    return res.render("login", { error: "Username or password is incorrect" });
+  }
+  const passwordMatch = await bcrypt.compare(
+    req.body.password,
+    user.passwordHash
+  );
+  if (!passwordMatch) {
+    return res.render("login", { error: "Username or password is incorrect" });
+  }
+  const token = v4();
+  await db.run(
+    "INSERT INTO AuthTokens (token, userId) VALUES (?, ?);",
+    token,
+    user.id
+  );
+  res.cookie("authToken", token, {
+    expires: new Date(Date.now() + 9000000000000),
+  });
   res.redirect("/");
 });
 

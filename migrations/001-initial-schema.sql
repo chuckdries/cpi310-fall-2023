@@ -2,7 +2,9 @@
 
 CREATE TABLE Messages(
   id INTEGER PRIMARY KEY,
-  message STRING
+  message STRING,
+  authorId INTEGER,
+  FOREIGN KEY (authorId) REFERENCES Users(id)
 );
 
 CREATE TABLE Users(

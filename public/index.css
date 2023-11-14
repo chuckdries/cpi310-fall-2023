@@ -48,3 +48,15 @@ form {
   border-radius: 6px;
   border: 1px solid black;
 }
+
+a {
+  color: black;
+  text-decoration: none;
+  background: #e4e4e4;
+  border: 1px solid darkgray;
+  padding: 5px;
+  border-radius: 5px;
+}
+a:hover {
+  background-color: #c3c3c3
+}

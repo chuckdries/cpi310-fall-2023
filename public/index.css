@@ -1,62 +1,105 @@
 body {
-  max-width: 700px;
-  margin: auto;
-  background-color: #eee;
+  color: #555;
   font-family: sans-serif;
-}
-
-form {
-  padding: 1em;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  position: relative;
 }
 
 .error-box {
-  background: #CC0000;
+  background: #cc0000;
   color: white;
   padding: 1em;
 }
 
+.header {
+  padding: 0 1em;
+}
+.header h1 {
+  margin-bottom: 0
+}
+
+#message-page-layout {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
 .message-list {
   list-style-type: none;
   padding-left: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  /* flex: auto; */
+  overflow: auto;
 }
 .message-list li {
-  margin: .5em;
-  background: white;
-  padding: 6px;
-  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
-  border-radius: 6px;
+  margin: 0.5em;
+  /* background: #f5f5f5; */
+  padding: 1em;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  border-radius: 100px;
+}
+
+.auth-form {
+  max-width: 350px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  border-radius: 1em;
+  padding: 1em;
+  gap: 1em;
+}
+
+.auth-form h1 {
+  margin: 0;
 }
 
 .message-form {
   display: flex;
+  padding: 0.5em;
+  /* border-radius: 6px; */
+  background: rgb(233, 233, 237);
+}
+
+.unauthenticated-buttons {
+  padding: 1em;
+  display: flex;
+  gap: 1em;
+  justify-content: center;
 }
 .message-form label {
   display: flex;
   flex: auto;
   flex-direction: column;
 }
+.message-form label span {
+  margin-left: 0.5em;
+  margin-bottom: 4px;
+}
 .message-form button {
   margin-left: 1em;
-  padding: 6px;
+  padding: 1em;
   align-self: self-end;
+  border-radius: 100px;
+  border: none;
+  background: rgb(167, 222, 248);
+  border: 3px solid white;
+}
+.message-form button:hover {
+  background: rgb(200, 228, 241);
 }
 .message-form input {
-  padding: 6px;
-  border-radius: 6px;
-  border: 1px solid black;
-}
-
-a {
-  color: black;
-  text-decoration: none;
-  background: #e4e4e4;
-  border: 1px solid darkgray;
-  padding: 5px;
-  border-radius: 5px;
-}
-a:hover {
-  background-color: #c3c3c3
+  padding: 1em;
+  border-radius: 100px;
+  border-style: none none solid none;
 }

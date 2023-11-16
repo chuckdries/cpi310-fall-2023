@@ -1,20 +1,26 @@
-<h1>CPI310 Message Board</h1>
-{{#if user}}<a href="/logout">logout</a>{{/if}}
+<div id="message-page-layout">
+  <div class="header">
+    <h1>CPI310 Message Board</h1>
+    {{#if user}}<a href="/logout">logout</a>{{/if}}
+  </div>
 
-<ul class="message-list">
-  {{#each messages}}
-    <li>{{author}}: {{message}}</li>
-  {{/each}}
-</ul>
+  <ul class="message-list">
+    {{#each messages}}
+      <li>{{author}}: {{message}}</li>
+    {{/each}}
+  </ul>
 
-{{#if user}}
-<form class="message-form" action="/message" method="POST">
-  <label>Message
-    <input type="text" name="message" />
-  </label>
-  <button type="submit">send</button>
-</form>
-{{else}}
-<a href="/register">Register</a>
-<a href="/login">Login</a>
-{{/if}}
+  {{#if user}}
+    <form class="message-form" action="/message" method="POST">
+      <label><span>Message</span>
+        <input autofocus type="text" name="message" />
+      </label>
+      <button type="submit">send</button>
+    </form>
+  {{else}}
+    <div class="unauthenticated-buttons">
+      <a href="/register">Register</a>
+      <a href="/login">Login</a>
+    </div>
+  {{/if}}
+</div>

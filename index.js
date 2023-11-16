@@ -104,7 +104,8 @@ app.post("/message", async (req, res) => {
     req.body.message,
     req.user
   );
-  res.redirect("/");
+  const messages = await getMessages();
+  res.render("partials/messages", { messages })
 });
 
 app.post("/register", async (req, res) => {

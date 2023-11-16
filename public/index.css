@@ -32,7 +32,7 @@ body {
   grid-column-gap: 0px;
   grid-row-gap: 0px;
 }
-.message-list {
+#message-list {
   list-style-type: none;
   padding-left: 0;
   display: flex;
@@ -41,7 +41,7 @@ body {
   /* flex: auto; */
   overflow: auto;
 }
-.message-list li {
+#message-list li {
   margin: 0.5em;
   /* background: #f5f5f5; */
   padding: 1em;

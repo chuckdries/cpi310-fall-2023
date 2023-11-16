@@ -9,8 +9,14 @@
 </ul>
 
   {{#if user}}
-    <form class="message-form" action="/message" method="POST">
-      <label><span>Message</span>
+    <form
+      class="message-form"
+      hx-post="/message"
+      hx-target="#message-list"
+      hx-swap="innerHTML scroll:bottom"
+    >
+      <label>
+        <span>Message</span>
         <input autofocus type="text" name="message" />
       </label>
       <button type="submit">send</button>

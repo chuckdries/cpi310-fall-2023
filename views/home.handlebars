@@ -14,6 +14,7 @@
       hx-post="/message"
       hx-target="#message-list"
       hx-swap="innerHTML scroll:bottom"
+      hx-on::after-request=" if(event.detail.successful) this.reset()"
     >
       <label>
         <span>Message</span>

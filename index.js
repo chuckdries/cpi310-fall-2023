@@ -45,13 +45,18 @@ app.use(async (req, res, next) => {
   next();
 });
 
+async function getMessages() {
+  const db = await dbPromise;
+  const messages = await db.all(
+    `SELECT Messages.id, Messages.message, Users.username as author 
+      FROM Messages LEFT JOIN Users WHERE Messages.authorId = Users.id;`
+  );
+  return messages;
+}
+
 app.get("/", async (req, res) => {
   try {
-    const db = await dbPromise;
-    const messages = await db.all(
-      `SELECT Messages.id, Messages.message, Users.username as author 
-        FROM Messages LEFT JOIN Users WHERE Messages.authorId = Users.id;`
-    );
+    const messages = await getMessages();
     const user = req.user;
     res.render("home", { messages, user });
   } catch (e) {
@@ -59,6 +64,11 @@ app.get("/", async (req, res) => {
     res.render("home", { error: "Something went wrong" });
   }
 });
+
+app.get('/messages', async (req, res) => {
+  const messages = await getMessages();
+  res.render("partials/messages", { messages })
+})
 
 app.get("/register", (req, res) => {
   if (req.user) {

@@ -4,11 +4,9 @@
     {{#if user}}<a href="/logout">logout</a>{{/if}}
   </div>
 
-  <ul class="message-list">
-    {{#each messages}}
-      <li>{{author}}: {{message}}</li>
-    {{/each}}
-  </ul>
+<ul class="message-list" hx-get="/messages" hx-trigger="every 1s">
+  {{> messages}}
+</ul>
 
   {{#if user}}
     <form class="message-form" action="/message" method="POST">

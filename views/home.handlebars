@@ -4,7 +4,7 @@
     {{#if user}}<a href="/logout">logout</a>{{/if}}
   </div>
 
-<ul class="message-list" hx-get="/messages" hx-trigger="every 1s">
+<ul id="message-list" hx-get="/messages" hx-trigger="every 2s">
   {{> messages}}
 </ul>
 

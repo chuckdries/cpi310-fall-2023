@@ -13,7 +13,7 @@
       class="message-form"
       hx-post="/message"
       hx-target="#message-list"
-      hx-swap="innerHTML scroll:bottom"
+      hx-swap="beforeend scroll:bottom"
       hx-on::after-request=" if(event.detail.successful) this.reset()"
     >
       <label>

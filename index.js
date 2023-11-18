@@ -5,6 +5,7 @@ import { open } from "sqlite";
 import bcrypt from "bcrypt";
 import { v4 } from "uuid";
 import cookieParser from "cookie-parser";
+import SSE from 'express-sse';
 
 const dbPromise = open({
   filename: "./data.db",
@@ -12,6 +13,8 @@ const dbPromise = open({
 });
 
 const app = express();
+
+const stream = new SSE();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -21,6 +24,8 @@ app.set("view engine", "handlebars");
 app.set("views", "./views");
 
 app.use("/public", express.static("./public"));
+
+app.get('/stream', stream.init);
 
 app.use(async (req, res, next) => {
   if (!req.cookies.authToken) {
@@ -99,13 +104,14 @@ app.get("/logout", async (req, res) => {
 
 app.post("/message", async (req, res) => {
   const db = await dbPromise;
-  await db.run(
+  const result = await db.run(
     "INSERT INTO Messages (message, authorId) VALUES (?, ?);",
     req.body.message,
     req.user
   );
-  const messages = await getMessages();
-  res.render("partials/messages", { messages })
+  const message = await db.get(`SELECT Messages.id, Messages.message, Users.username as author 
+  FROM Messages LEFT JOIN Users ON Messages.authorId = Users.id WHERE Messages.id = ?;`, result.lastID);
+  res.render("partials/message", {...message, layout: false})
 });
 
 app.post("/register", async (req, res) => {

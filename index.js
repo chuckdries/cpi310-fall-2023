@@ -1,11 +1,12 @@
 import express from "express";
-import { engine } from "express-handlebars";
+import { create } from "express-handlebars";
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 import bcrypt from "bcrypt";
 import { v4 } from "uuid";
 import cookieParser from "cookie-parser";
 import SSE from 'express-sse';
+import compression from 'compression';
 
 const dbPromise = open({
   filename: "./data.db",
@@ -14,12 +15,15 @@ const dbPromise = open({
 
 const app = express();
 
+const hbs = create();
+
 const stream = new SSE();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(compression())
 
-app.engine("handlebars", engine());
+app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 app.set("views", "./views");
 
@@ -111,6 +115,9 @@ app.post("/message", async (req, res) => {
   );
   const message = await db.get(`SELECT Messages.id, Messages.message, Users.username as author 
   FROM Messages LEFT JOIN Users ON Messages.authorId = Users.id WHERE Messages.id = ?;`, result.lastID);
+  const messageHtml = await hbs.render("views/partials/message.handlebars", {...message, layout: false});
+  console.log("🚀 ~ file: index.js:117 ~ app.post ~ messageHtml:", messageHtml)
+  stream.send(messageHtml, "message")
   res.render("partials/message", {...message, layout: false})
 });
 

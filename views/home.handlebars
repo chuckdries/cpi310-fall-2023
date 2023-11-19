@@ -4,7 +4,13 @@
     {{#if user}}<a href="/logout">logout</a>{{/if}}
   </div>
 
-<ul id="message-list" hx-get="/messages" hx-trigger="every 2s">
+<ul
+  id="message-list"
+  hx-ext="sse"
+  sse-connect="/stream"
+  sse-swap="message"
+  hx-swap="beforeend scroll:bottom"
+>
   {{> messages}}
 </ul>
 

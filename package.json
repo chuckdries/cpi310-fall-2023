@@ -16,7 +16,7 @@
     "cookie-parser": "^1.4.6",
     "express": "^4.18.2",
     "express-handlebars": "^7.1.2",
-    "express-sse": "^0.5.3",
+    "express-sse": "git://github.com/chuckdries/express-sse#6c9eecdbac9903fed367612b8fe7aec8182eae8e",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.6",
     "uuid": "^9.0.1"

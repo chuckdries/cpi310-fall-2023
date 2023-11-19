@@ -17,7 +17,10 @@ const app = express();
 
 const hbs = create();
 
-const stream = new SSE();
+const stream = new SSE([], {
+  isSerialized: true,
+  jsonData: false,
+});
 
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
